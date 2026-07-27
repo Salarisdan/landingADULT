@@ -769,7 +769,7 @@ h3 {
   z-index: 1;
 }
 
-.achievement-card span {
+.achievement-card > span {
   position: relative;
   justify-self: end;
   color: rgba(228, 245, 255, 0.58);
