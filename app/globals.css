@@ -584,8 +584,33 @@ h3 {
 .process-card,
 .timeline__content,
 .contact__inner {
+  position: relative;
+  overflow: hidden;
   border-radius: 34px;
   padding: 32px;
+  background:
+    radial-gradient(120% 95% at 8% 0%, rgba(184, 246, 255, 0.09), transparent 50%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.015)),
+    rgba(9, 13, 21, 0.92);
+  border: 1px solid rgba(169, 206, 230, 0.2);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(6px);
+}
+
+.panel::before,
+.skill-card::before,
+.process-card::before,
+.timeline__content::before,
+.contact__inner::before,
+.why-hire-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120px 90px at 8% 10%, rgba(184, 246, 255, 0.14), transparent 72%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 36%);
+  opacity: 0.7;
 }
 
 .why-hire-grid {
@@ -599,11 +624,13 @@ h3 {
   overflow: hidden;
   padding: 28px;
   border-radius: 28px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(169, 206, 230, 0.2);
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015)),
-    rgba(10, 13, 19, 0.92);
-  box-shadow: var(--shadow);
+    radial-gradient(120% 95% at 8% 0%, rgba(184, 246, 255, 0.09), transparent 50%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.015)),
+    rgba(9, 13, 21, 0.92);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(6px);
   transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
 }
 
@@ -625,12 +652,6 @@ h3 {
 
 .why-hire-card p {
   max-width: 32ch;
-}
-
-.why-hire-card:hover {
-  transform: translateY(-8px);
-  border-color: rgba(151, 236, 255, 0.24);
-  box-shadow: 0 34px 84px rgba(0, 0, 0, 0.56);
 }
 
 .panel--accent {
@@ -703,9 +724,12 @@ h3 {
   padding: 34px;
   min-height: 250px;
   display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 14px;
   align-content: space-between;
   isolation: isolate;
   transition: border-color 260ms ease, box-shadow 260ms ease, background-color 260ms ease;
+  backdrop-filter: blur(6px);
 }
 
 .achievement-card:nth-child(1) {
@@ -717,11 +741,17 @@ h3 {
 
 .achievement-card:nth-child(2) {
   grid-column: span 3;
+  background:
+    linear-gradient(140deg, rgba(0, 232, 255, 0.07), rgba(255, 255, 255, 0.015) 38%, rgba(6, 10, 18, 0.95)),
+    rgba(10, 14, 22, 0.94);
 }
 
 .achievement-card:nth-child(3) {
   grid-column: span 3;
   transform: translateY(18px);
+  background:
+    linear-gradient(145deg, rgba(170, 240, 255, 0.06), rgba(255, 255, 255, 0.01) 40%, rgba(7, 11, 20, 0.95)),
+    rgba(10, 14, 23, 0.94);
 }
 
 .achievement-card::before {
@@ -746,9 +776,12 @@ h3 {
 
 .achievement-card__number {
   position: relative;
+  display: inline-block;
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: clamp(3.5rem, 6vw, 5.8rem);
-  line-height: 0.9;
+  font-size: clamp(3.3rem, 5.5vw, 5.2rem);
+  line-height: 1.02;
+  padding-top: 0.08em;
+  margin-bottom: 0.12em;
   letter-spacing: -0.04em;
   color: #f0fcff;
   background: linear-gradient(180deg, #f7feff 0%, #d8f8ff 45%, #8feeff 100%);
@@ -763,9 +796,9 @@ h3 {
   position: relative;
   margin: 0;
   color: rgba(233, 245, 255, 0.9);
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 600;
-  line-height: 1.6;
+  line-height: 1.52;
   z-index: 1;
 }
 
@@ -779,7 +812,12 @@ h3 {
 }
 
 .achievement-card p {
-  max-width: 18ch;
+  max-width: 17ch;
+}
+
+.achievement-card:nth-child(2) .achievement-card__number,
+.achievement-card:nth-child(3) .achievement-card__number {
+  font-size: clamp(3.05rem, 4.8vw, 4.2rem);
 }
 
 .section--in-view .achievement-card {
@@ -837,9 +875,19 @@ h3 {
 .profile-card:hover,
 .contact__inner:hover,
 .hero__stats article:hover {
-  transform: translateY(-6px);
-  border-color: rgba(151, 236, 255, 0.22);
-  box-shadow: 0 36px 90px rgba(0, 0, 0, 0.58);
+  transform: translateY(-8px) scale(1.01);
+  border-color: rgba(151, 236, 255, 0.34);
+  box-shadow: 0 38px 96px rgba(0, 0, 0, 0.62), 0 0 0 1px rgba(0, 232, 255, 0.1) inset;
+}
+
+.why-hire-card:hover,
+.panel:hover,
+.skill-card:hover,
+.process-card:hover,
+.timeline__content:hover,
+.contact__inner:hover {
+  border-color: rgba(151, 236, 255, 0.34);
+  box-shadow: 0 38px 96px rgba(0, 0, 0, 0.62), 0 0 0 1px rgba(0, 232, 255, 0.1) inset;
 }
 
 .hero__stats article {
@@ -1052,8 +1100,9 @@ h3 {
   }
 
   .achievement-card__number {
-    font-size: clamp(3.9rem, 14vw, 5.1rem);
-    line-height: 0.84;
+    font-size: clamp(3.6rem, 13vw, 4.7rem);
+    line-height: 0.98;
+    padding-top: 0.07em;
   }
 
   .achievement-card p {
@@ -1079,6 +1128,15 @@ h3 {
 
   .liquid::before,
   .liquid::after {
+    display: none;
+  }
+
+  .panel::before,
+  .skill-card::before,
+  .process-card::before,
+  .timeline__content::before,
+  .contact__inner::before,
+  .why-hire-card::after {
     display: none;
   }
 }
