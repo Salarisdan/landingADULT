@@ -705,6 +705,7 @@ h3 {
   display: grid;
   align-content: space-between;
   isolation: isolate;
+  transition: border-color 260ms ease, box-shadow 260ms ease, background-color 260ms ease;
 }
 
 .achievement-card:nth-child(1) {
@@ -737,7 +738,7 @@ h3 {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, 0.09), transparent 44%);
+  background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, 0.05), transparent 44%);
   transform: translateX(-130%);
   transition: transform 620ms ease;
   z-index: 0;
@@ -749,14 +750,21 @@ h3 {
   font-size: clamp(3.5rem, 6vw, 5.8rem);
   line-height: 0.9;
   letter-spacing: -0.04em;
+  color: #f0fcff;
+  background: linear-gradient(180deg, #f7feff 0%, #d8f8ff 45%, #8feeff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 22px rgba(0, 232, 255, 0.24), 0 6px 24px rgba(0, 0, 0, 0.65);
   z-index: 1;
 }
 
 .achievement-card p {
   position: relative;
   margin: 0;
-  color: var(--muted);
+  color: rgba(233, 245, 255, 0.9);
   font-size: 1rem;
+  font-weight: 600;
   line-height: 1.6;
   z-index: 1;
 }
@@ -764,7 +772,7 @@ h3 {
 .achievement-card span {
   position: relative;
   justify-self: end;
-  color: rgba(245, 239, 228, 0.28);
+  color: rgba(228, 245, 255, 0.58);
   font-size: 0.78rem;
   letter-spacing: 0.24em;
   z-index: 1;
@@ -772,6 +780,15 @@ h3 {
 
 .achievement-card p {
   max-width: 18ch;
+}
+
+.section--in-view .achievement-card {
+  border-color: rgba(156, 236, 255, 0.3);
+  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(0, 232, 255, 0.09) inset;
+}
+
+.section--in-view .achievement-card__number {
+  text-shadow: 0 0 28px rgba(0, 232, 255, 0.34), 0 8px 30px rgba(0, 0, 0, 0.68);
 }
 
 .hero__grid {
@@ -1027,6 +1044,21 @@ h3 {
 
   .timeline__marker {
     left: 2px;
+  }
+
+  .achievement-card {
+    min-height: 205px;
+    padding: 24px;
+  }
+
+  .achievement-card__number {
+    font-size: clamp(3.9rem, 14vw, 5.1rem);
+    line-height: 0.84;
+  }
+
+  .achievement-card p {
+    font-size: 1.02rem;
+    line-height: 1.48;
   }
 }
 

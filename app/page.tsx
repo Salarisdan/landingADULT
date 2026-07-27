@@ -1,7 +1,6 @@
 'use client';
 
 import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
-import Lenis from 'lenis';
 import { useEffect, useRef, useState } from 'react';
 
 const skills = [
@@ -201,25 +200,44 @@ export default function Home() {
       return;
     }
 
-    const lenis = new Lenis({
-      duration: 1.05,
-      wheelMultiplier: 0.95,
-      touchMultiplier: 1,
-      lerp: 0.1,
-      smoothWheel: true,
-    });
-
+    let isMounted = true;
     let frameId = 0;
-    const raf = (time: number) => {
-      lenis.raf(time);
-      frameId = requestAnimationFrame(raf);
+    let destroyLenis: (() => void) | undefined;
+
+    const setupLenis = async () => {
+      try {
+        const lenisModule = await import('lenis');
+        const lenis = new lenisModule.default({
+          duration: 1.05,
+          wheelMultiplier: 0.95,
+          touchMultiplier: 1,
+          lerp: 0.1,
+          smoothWheel: true,
+        });
+
+        if (!isMounted) {
+          lenis.destroy();
+          return;
+        }
+
+        const raf = (time: number) => {
+          lenis.raf(time);
+          frameId = requestAnimationFrame(raf);
+        };
+
+        frameId = requestAnimationFrame(raf);
+        destroyLenis = () => lenis.destroy();
+      } catch (error) {
+        console.warn('Lenis failed to initialize, falling back to native scroll.', error);
+      }
     };
 
-    frameId = requestAnimationFrame(raf);
+    setupLenis();
 
     return () => {
+      isMounted = false;
       cancelAnimationFrame(frameId);
-      lenis.destroy();
+      destroyLenis?.();
     };
   }, [shouldReduceMotion]);
 
@@ -354,8 +372,8 @@ export default function Home() {
           </a>
         </nav>
 
-        <motion.div className="hero__grid" variants={container} initial="hidden" animate="visible">
-          <motion.section className="hero__content" variants={reveal} style={{ y: heroContentY }}>
+        <motion.div className="hero__grid" variants={container} initial={false} animate="visible">
+          <motion.section className="hero__content" variants={reveal} initial={false} style={{ y: heroContentY }}>
             <p className="eyebrow">HRD / Head of Recruitment / Recruitment Team Lead</p>
             <h1>HRD / Head of Recruitment с опытом в adult-индустрии и командном рекрутинге.</h1>
             <p className="lead">
@@ -412,7 +430,7 @@ export default function Home() {
             </div>
           </motion.section>
 
-          <motion.aside className="hero__card motion-tilt" variants={reveal} style={{ y: heroCardY }}>
+          <motion.aside className="hero__card motion-tilt" variants={reveal} initial={false} style={{ y: heroCardY }}>
             <div className="profile-card">
               <div className="profile-card__badge">HR experience</div>
               <h2>Полный цикл найма и управление HR-процессами.</h2>
@@ -433,12 +451,12 @@ export default function Home() {
       </header>
 
       <section className="section section--glow section--parallax">
-        <motion.div className="section__heading" variants={container} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
+        <motion.div className="section__heading" variants={container} initial={false} whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
           <motion.p className="eyebrow" variants={reveal}>Что подтверждает опыт</motion.p>
           <motion.h2 variants={reveal}>Коротко и по делу: масштаб роли, источники и специализация.</motion.h2>
         </motion.div>
 
-        <motion.div className="achievement-grid" variants={container} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
+        <motion.div className="achievement-grid" variants={container} initial={false} whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
           {achievements.map((item, index) => (
             <motion.article key={item.label} className="achievement-card motion-tilt" variants={reveal} whileHover={tiltHover} transition={{ type: 'spring', stiffness: 240, damping: 18 }}>
               <div className="achievement-card__number">
@@ -452,12 +470,12 @@ export default function Home() {
       </section>
 
       <section className="section section--glow section--parallax">
-        <motion.div className="section__heading" variants={container} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
+        <motion.div className="section__heading" variants={container} initial={false} whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
           <motion.p className="eyebrow" variants={reveal}>Почему меня нанимают</motion.p>
           <motion.h2 variants={reveal}>Потому что я закрываю не только вакансии, а саму функцию найма.</motion.h2>
         </motion.div>
 
-        <motion.div className="why-hire-grid" variants={container} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
+        <motion.div className="why-hire-grid" variants={container} initial={false} whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
           {whyHire.map((item) => (
             <motion.article key={item.title} className="why-hire-card motion-tilt" variants={reveal}>
               <h3>{item.title}</h3>
@@ -468,12 +486,12 @@ export default function Home() {
       </section>
 
       <section className="section section--glow section--parallax">
-        <motion.div className="section__heading" variants={container} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
+        <motion.div className="section__heading" variants={container} initial={false} whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
           <motion.p className="eyebrow" variants={reveal}>О себе</motion.p>
           <motion.h2 variants={reveal}>Не просто закрываю вакансии, а выстраиваю работающую систему найма.</motion.h2>
         </motion.div>
 
-        <motion.div className="about-grid" variants={container} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
+        <motion.div className="about-grid" variants={container} initial={false} whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
           <motion.div className="panel" variants={reveal}>
             <p>Работаю как с массовым подбором, так и с позициями уровня Team Lead и Management. Сильная сторона — соединять рекрутинг, аналитику и автоматизацию в один управляемый процесс.</p>
           </motion.div>
@@ -484,12 +502,12 @@ export default function Home() {
       </section>
 
       <section className="section section--glow section--parallax">
-        <motion.div className="section__heading" variants={container} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
+        <motion.div className="section__heading" variants={container} initial={false} whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
           <motion.p className="eyebrow" variants={reveal}>Ключевые навыки</motion.p>
           <motion.h2 variants={reveal}>Инструменты, процессы и управленческие компетенции.</motion.h2>
         </motion.div>
 
-        <motion.div className="skills-grid" variants={container} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
+        <motion.div className="skills-grid" variants={container} initial={false} whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
           {skills.map((skill) => (
             <motion.article key={skill.title} className="skill-card motion-tilt" variants={reveal} whileHover={tiltHover} transition={{ type: 'spring', stiffness: 280, damping: 18 }}>
               <h3>{skill.title}</h3>
@@ -500,7 +518,7 @@ export default function Home() {
       </section>
 
       <section className="section section--glow section--parallax" id="experience">
-        <motion.div className="section__heading" variants={container} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
+        <motion.div className="section__heading" variants={container} initial={false} whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
           <motion.p className="eyebrow" variants={reveal}>Опыт</motion.p>
           <motion.h2 variants={reveal}>Ключевые роли и результаты.</motion.h2>
         </motion.div>
@@ -510,7 +528,7 @@ export default function Home() {
             <motion.article
               key={item.role}
               className="timeline__item"
-              initial={{ opacity: 0, x: index % 2 === 0 ? -54 : 54, rotate: index % 2 === 0 ? -2 : 2 }}
+              initial={false}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.78, ease: 'easeOut' }}
@@ -528,12 +546,12 @@ export default function Home() {
       </section>
 
       <section className="section section--glow section--parallax">
-        <motion.div className="section__heading" variants={container} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
+        <motion.div className="section__heading" variants={container} initial={false} whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
           <motion.p className="eyebrow" variants={reveal}>Подход</motion.p>
           <motion.h2 variants={reveal}>Собираю рекрутинг как систему: от источника трафика до удержания.</motion.h2>
         </motion.div>
 
-        <motion.div className="process-grid" variants={container} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
+        <motion.div className="process-grid" variants={container} initial={false} whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
           {process.map((item) => (
             <motion.article key={item.step} className="process-card motion-tilt" variants={reveal}>
               <span>{item.step}</span>
@@ -545,7 +563,7 @@ export default function Home() {
       </section>
 
       <section className="section section--glow section--parallax contact" id="contact">
-        <motion.div className="contact__inner" variants={container} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
+        <motion.div className="contact__inner" variants={container} initial={false} whileInView="visible" viewport={{ once: true, amount: 0.25 }}>
           <motion.p className="eyebrow" variants={reveal}>Контакт</motion.p>
           <motion.h2 variants={reveal}>Если нужен HRD или Head of Recruitment, пишите в Telegram.</motion.h2>
           <motion.a className="button button--primary liquid" href="https://t.me/salarisdan" target="_blank" rel="noreferrer" variants={reveal} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
